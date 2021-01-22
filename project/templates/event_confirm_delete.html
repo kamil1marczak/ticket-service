@@ -1,0 +1,12 @@
+{% extends 'base_form.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block main %}
+<form  method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <p>Are you sure you want to delete <strong> {{ object }} </strong> ?</p>
+    <button  type="submit"  class="btn btn-success">Confirm</button>
+</form>
+{% endblock %}

@@ -1,0 +1,143 @@
+
+{% extends 'base.html' %}
+
+
+{% block content %}
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: separate;
+    justify-content: center;
+    text-align: center;
+    padding: 2px;
+}
+</style>
+
+<div class="box-body">
+  <div class="table-responsive">
+    <table id="user-list" class="table table-bordered table-hover">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price for regular ticket</th>
+        <th>Regular ticket pool</th>
+        <th>Regular ticket left</th>
+        <th>Buy/ reserve ticket</th>
+        <th>Price for premium ticket</th>
+        <th>Premium ticket pool</th>
+        <th>Premium ticket left</th>
+        <th>Buy/ reserve ticket</th>
+        <th>Price for VIP ticket</th>
+        <th>VIP ticket pool</th>
+        <th>VIP ticket left</th>
+        <th>Buy/ reserve ticket</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for v in object_list %}
+        <tr>
+          <td>{{ v.name }}</td>
+          <td>{{ v.description }}</td>
+          <td>
+            {% if v.price_regular > 0 %}
+            {{ v.price_regular }}
+            {% else %}
+            <p> N/A </p>
+            {% endif %}
+          </td>
+          <td>{{ v.regular_tickets_number }}</td>
+          <td>{{ v.tickets_left.regular }}</td>
+        <td>
+          {% if v.tickets_left.regular > 0 %}
+            <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=0 sold_reserved=0 %}">Buy</a>
+          <br>
+            <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=0 sold_reserved=1 %}">Reserve</a>
+            {% else %}
+            <p> N/A </p>
+            {% endif %}
+
+          </td>
+          <td>
+            {% if v.price_premium > 0 %}
+            {{ v.price_premium }}
+            {% else %}
+            <p> N/A </p>
+            {% endif %}
+          </td>
+
+          <td>{{ v.premium_tickets_number }}</td>
+        <td>{{ v.tickets_left.premium }}</td>
+        <td>
+          {% if v.tickets_left.premium > 0 %}
+            <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=1 sold_reserved=0 %}">Buy</a>
+          <br>
+            <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=1 sold_reserved=1 %}">Reserve</a>
+            {% else %}
+            <p> N/A </p>
+            {% endif %}
+
+          </td>
+
+
+          <td>
+            {% if v.price_vip > 0 %}
+            {{ v.price_vip }}
+            {% else %}
+            <p> N/A </p>
+            {% endif %}
+
+            </td>
+          <td>{{ v.vip_tickets_number }}</td>
+        <td>{{ v.tickets_left.vip }}</td>
+
+        <td>
+          {% if v.tickets_left.vip > 0 %}
+            <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=2 sold_reserved=0 %}">Buy</a>
+          <br>
+            <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=2 sold_reserved=1 %}">Reserve</a>
+            {% else %}
+            <p> N/A </p>
+            {% endif %}
+
+          </td>
+
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{##}
+{#<table>#}
+{#  {% for event in object_list %}#}
+{#    <tr>#}
+{#      <th>Date of event</th>#}
+{#      <th>event.event_date_time</th>#}
+{#    </tr>#}
+{#    <tr>#}
+{#      <td>Name</td>#}
+{#      <td>Event.name</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#      <td>Description</td>#}
+{#      <td>event.description</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#      <td>Price for regular ticket</td>#}
+{#      <td>event.price_regular</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#      <td>Price for premium ticket<</td>#}
+{#      <td>event.price_premium</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#      <td>Price for VIP ticket<</td>#}
+{#      <td>event.price_vip</td>#}
+{#    </tr>#}
+{##}
+{#  {% endfor %}#}
+{#</table>#}

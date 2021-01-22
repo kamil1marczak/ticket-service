@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <title>Event Manager</title>
+  </head>
+  <body>
+
+  {% load bootstrap4 %}
+  {% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{% bootstrap_messages %}
+
+
+    <div class="container d-flex h-100">
+      <div class="row justify-content-center">
+        <div class="col-20">
+          <h1>{{ page_function }}</h1>
+          {% block main %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
