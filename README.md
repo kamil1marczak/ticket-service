@@ -15,6 +15,5 @@ admin manager http://localhost:1337/admin
 
 TODO:
 
-- convert reservation to purchase 
 - test
 - rest API

@@ -1,0 +1,26 @@
+{% extends 'base_form.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block main %}
+
+
+  <div>
+
+  <p>
+    {% if new_ticket_action %}
+      <span> the ticket has been {{ new_ticket_action }}, your ticket id is </span>
+      <h1>{{ new_ticket_id|upper }}</h1>
+      <span> save your ticket id</span>
+    {% endif %}
+
+    {%  if no_ticket_message %}
+
+      <span> {{ no_ticket_message }} </span>
+
+    {% endif %}
+  </p>
+
+  </div>
+
+{% endblock %}

@@ -13,8 +13,38 @@
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
 
-{% block content %}{% endblock %}
+<div id="sidebar">
+        {% block sidebar %}
+        <ul>
+            <li><a href="{% url 'listing' %}">Home</a></li>
+            <li><a href="{% url 'buy_reserved' %}">Buy previously reserved ticket</a></li>
 
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'logout' %}">Log Out</a></li>
+        {% else %}
+        <li><a href="{% url 'login' %}">Log In</a></li>
+        <li><a href="{% url 'sign_up' %}">Sign Up</a></li>
+        {% endif %}
+        {% if user.is_superuser %}
+         <li><a href="{% url 'add_event' %}">Add Event</a></li>
+          <li><a href="/admin/">Admin</a></li>
+
+        {% endif %}
+
+        </ul>
+        {% endblock %}
+</div>
+
+
+{#{% if user.is_authenticated %}#}
+{#  Hi {{ user.username }}!#}
+{#  #}
+{#{% else %}#}
+{#  <p>You are not logged in</p>#}
+{#  <a href="{% url 'login' %}">Log In</a>#}
+{#{% endif %}#}
+
+{% block content %}{% endblock %}
 
 </body>
 </html>

@@ -3,12 +3,11 @@
 {% load crispy_forms_tags %}
 
 
-
 {% block main %}
 <form  method="post">
     {% csrf_token %}
     {{ form|crispy }}
-    <p>Are you sure you want to {{ message }} <strong> {{ object }} </strong> ?</p>
+    <p>Are you sure you want to buy reserved ticket ?</p>
     <button  type="submit"  class="btn btn-success">Confirm</button>
 </form>
 {% endblock %}

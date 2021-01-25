@@ -15,13 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from ticket_platform.views import EventListingView, AddEventView, EventUpdateView, EventDeleteView, BuyTicketView
+from ticket_platform.views import EventListingView, AddEventView, EventUpdateView, EventDeleteView, BuyTicketView, UserLoginView, UserLogoutView, SignUpView, BuyReservedView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
+    path('login/', UserLoginView.as_view(), name='login'),
+    path('logout/', UserLogoutView.as_view(), name='logout'),
+    path('sign_up/', SignUpView.as_view(), name='sign_up'),
     path('', EventListingView.as_view(), name='listing'),
-    # path('add_event/', AddEventView.as_view(), name='add_event'),
-    path('buy_ticket/<int:event_pk>/<int:ticket_type>/<int:sold_reserved>', BuyTicketView.as_view(), name='buy_ticket'),
+    path('add_event/', AddEventView.as_view(), name='add_event'),
+    path('buy_reserved/', BuyReservedView.as_view(), name='buy_reserved'),
+    path('buy_ticket/<int:event_pk>/<int:ticket_type>/<int:sold_reserved>/', BuyTicketView.as_view(), name='buy_ticket'),
     # path('buy_ticket/', BuyTicketView.as_view(), name='buy_ticket'),
     path('<pk>/event_update/', EventUpdateView.as_view(), name='update_event'),
     path('<pk>/event_delete/', EventDeleteView.as_view(), name='delete_event'),
