@@ -14,11 +14,12 @@ from pathlib import Path
 
 from celery.schedules import crontab
 
+from datetime import timedelta
+
 import ticket.tasks
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -36,7 +37,6 @@ DEBUG = int(os.environ.get("DEBUG", default=0))
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'bootstrap4',
     'crispy_forms',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -85,7 +87,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ticket.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/Ksettings/#databases
 
@@ -107,7 +108,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -125,7 +125,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -150,6 +149,14 @@ STATIC_URL = "/staticfiles/"
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+}
 
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
@@ -158,10 +165,13 @@ CELERY_BEAT_SCHEDULE = {
         "task": "ticket.tasks.delete_overdue_reservations",
         "schedule": crontab(minute="*/1"),
     },
-    # "send_email_report": {
-    #     "task": "ticket.tasks.send_email_report",
-    #     "schedule": crontab(hour="*/1"),
-    # },
+
+}
+
+SIMPLE_JWT = {
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=3),
+    'ROTATE_REFRESH_TOKENS': True,
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

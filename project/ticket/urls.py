@@ -14,20 +14,49 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from ticket_platform.views import EventListingView, AddEventView, EventUpdateView, EventDeleteView, BuyTicketView, UserLoginView, UserLogoutView, SignUpView, BuyReservedView
+from django.urls import path, include, re_path
+from ticket_platform.views import EventListingView, AddEventView, EventUpdateView, EventDeleteView, BuyTicketView, \
+    UserLoginView, UserLogoutView, SignUpView, BuyReservedView, EventViewSet, TicketSetView, AccountSetView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from rest_framework.routers import DefaultRouter, SimpleRouter
+from .routers import ReadOnlyRouter
+
+router = SimpleRouter()
+read_only_router = ReadOnlyRouter()
+router.register(r'event', EventViewSet)
+router.register(r'ticket', TicketSetView)
+read_only_router.register(r'account', AccountSetView)
+
 
 urlpatterns = [
+    path('api/', include(router.urls)),
+    path('api/', include(read_only_router.urls)),
     path('admin/', admin.site.urls, name='admin'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('logout/', UserLogoutView.as_view(), name='logout'),
     path('sign_up/', SignUpView.as_view(), name='sign_up'),
     path('', EventListingView.as_view(), name='listing'),
+    # path('api/event_list/', APIEventListingView.as_view(), name='api_event'),
+
+    # re_path(r'^api/event_list/$', APIEventListingView.as_view(), name='api_event'),
+    # path('api/ticket/', APITicketView.as_view(), name='api_ticket'),
     path('add_event/', AddEventView.as_view(), name='add_event'),
     path('buy_reserved/', BuyReservedView.as_view(), name='buy_reserved'),
-    path('buy_ticket/<int:event_pk>/<int:ticket_type>/<int:sold_reserved>/', BuyTicketView.as_view(), name='buy_ticket'),
+    path('buy_ticket/<int:event_pk>/<int:ticket_type>/<int:sold_reserved>/', BuyTicketView.as_view(),
+         name='buy_ticket'),
     # path('buy_ticket/', BuyTicketView.as_view(), name='buy_ticket'),
     path('<pk>/event_update/', EventUpdateView.as_view(), name='update_event'),
     path('<pk>/event_delete/', EventDeleteView.as_view(), name='delete_event'),
+
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+
     # path('ticket/', TicketManagementView.as_view(), name='ticket_management')
 ]
+
+
+# urlpatterns += router.urls

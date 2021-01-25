@@ -11,10 +11,18 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins import SuperuserRequiredMixin
 from django.contrib.auth.models import User
-import uuid
+from rest_framework.views import APIView
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, RetrieveModelMixin
+from rest_framework.generics import GenericAPIView, RetrieveUpdateDestroyAPIView
+from django.http import JsonResponse
+from .serializers import EventSerializer, TicketSerializer, AccountSerializer
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.viewsets import ViewSet, ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.decorators import action
 
 
 from datetime import datetime
+
 
 # Create your views here.
 
@@ -22,9 +30,11 @@ class UserLoginView(LoginView):
     template_name = 'user/login.html'
     success_url = reverse_lazy('listing')
 
+
 class UserLogoutView(LogoutView):
     template_name = 'user/logout.html'
     success_url = reverse_lazy('listing')
+
 
 class SignUpView(CreateView):
     model = User
@@ -53,6 +63,7 @@ class AddEventView(SuperuserRequiredMixin, CreateView):
         context['page_function'] = 'Add Event'
         return context
 
+
 class EventUpdateView(SuperuserRequiredMixin, UpdateView):
     model = Event
     template_name = 'event_form.html'
@@ -64,10 +75,12 @@ class EventUpdateView(SuperuserRequiredMixin, UpdateView):
         context['page_function'] = 'Update Event'
         return context
 
+
 class EventDeleteView(SuperuserRequiredMixin, DeleteView):
     model = Event
     template_name = 'event_confirm_delete.html'
     success_url = reverse_lazy('listing')
+
 
 class BuyTicketView(FormView):
     model = Ticket
@@ -79,8 +92,6 @@ class BuyTicketView(FormView):
         if sold_reserved == 1:
             message = 'reserve'
         return render(request, 'buy_ticket_form.html', {'message': message})
-
-
 
     def charge(self, amount, currency='EUR'):
         account = Account.objects.get(currency=currency)
@@ -122,7 +133,10 @@ class BuyTicketView(FormView):
             no_ticket_message = 'There is no more ticket available for this event'
 
         # return super(BuyTicketView, self).form_valid(form)
-        return render(self.request, template_name='purchase_confirmation.html', context={"new_ticket_id": new_ticket_id, "new_ticket_action": new_ticket_action, "no_ticket_message": no_ticket_message})
+        return render(self.request, template_name='purchase_confirmation.html',
+                      context={"new_ticket_id": new_ticket_id, "new_ticket_action": new_ticket_action,
+                               "no_ticket_message": no_ticket_message})
+
 
 class BuyReservedView(FormView):
     # model = Ticket
@@ -147,3 +161,51 @@ class BuyReservedView(FormView):
                       context={"new_ticket_id": id, "new_ticket_action": new_ticket_action,
                                "no_ticket_message": no_ticket_message})
 
+
+class EventViewSet(ModelViewSet):
+
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+
+    def get_permissions(self):
+        permission_classes = []
+
+        if self.action == 'create':
+            permission_classes = [IsAdminUser]
+        elif self.action == 'list':
+            permission_classes = []
+        elif self.action == 'retrieve' or self.action == 'update' or self.action == 'partial_update':
+            permission_classes = [IsAdminUser]
+        elif self.action == 'destroy':
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
+
+class AccountSetView(ReadOnlyModelViewSet):
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
+    permission_classes = [IsAdminUser]
+    lookup_field = 'currency'
+    http_method_names = ['get']
+
+
+class TicketSetView(ModelViewSet):
+
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+    # http_method_names = ['get', 'patch']
+    # permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def get_permissions(self):
+        permission_classes = []
+        if self.action == 'create':
+            permission_classes = []
+        elif self.action == 'list':
+            permission_classes = [IsAdminUser]
+        elif self.action == 'retrieve' or self.action == 'update':
+            permission_classes = [IsAdminUser]
+        elif self.action == self.action == 'partial_update':
+            permission_classes = []
+        elif self.action == 'destroy':
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
