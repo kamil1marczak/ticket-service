@@ -23,13 +23,14 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework.routers import DefaultRouter, SimpleRouter
 from .routers import ReadOnlyRouter
+import debug_toolbar
 
 router = SimpleRouter()
 read_only_router = ReadOnlyRouter()
 router.register(r'event', EventViewSet)
 router.register(r'ticket', TicketSetView)
 read_only_router.register(r'account', AccountSetView)
-
+# from django.conf import settings
 
 urlpatterns = [
     path('api/', include(router.urls)),
@@ -53,10 +54,23 @@ urlpatterns = [
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
+    path("__debug__/", include(debug_toolbar.urls)),
 
     # path('ticket/', TicketManagementView.as_view(), name='ticket_management')
 ]
 
-
-# urlpatterns += router.urls
+# if settings.DEBUG:
+#     from django.conf.urls.static import static
+#     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+#
+#     # Serve static and media files from development server
+#     urlpatterns += staticfiles_urlpatterns()
+#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+#
+#     import debug_toolbar
+#
+#     urlpatterns = [
+#                       path('__debug__/', include(debug_toolbar.urls)),
+#                   ] + urlpatterns
+#
+# # urlpatterns += router.urls

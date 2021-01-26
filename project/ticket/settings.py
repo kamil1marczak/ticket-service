@@ -52,11 +52,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'debug_toolbar',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,7 +66,25 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'redis://redis:6379',
+    },
+}
+
+# Key in `CACHES` dict
+CACHE_MIDDLEWARE_ALIAS = 'default'
+
+# Additional prefix for cache keys
+CACHE_MIDDLEWARE_KEY_PREFIX = ''
+
+# Cache key TTL in seconds
+CACHE_MIDDLEWARE_SECONDS = 600
 
 ROOT_URLCONF = 'ticket.urls'
 
@@ -145,7 +165,8 @@ LOGIN_REDIRECT_URL = 'listing'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = "/staticfiles/"
+# STATIC_URL = "/staticfiles/"
+STATIC_URL = "/static/"
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
@@ -169,10 +190,36 @@ CELERY_BEAT_SCHEDULE = {
 
 }
 
+INTERNAL_IPS = ('127.0.0.1', '0.0.0.0', 'localhost', '172.17.0.1')
+
+# DEBUG_TOOLBAR_PANELS = [
+#     'debug_toolbar.panels.versions.VersionsPanel',
+#     'debug_toolbar.panels.timer.TimerPanel',
+#     'debug_toolbar.panels.settings.SettingsPanel',
+#     'debug_toolbar.panels.headers.HeadersPanel',
+#     'debug_toolbar.panels.request.RequestPanel',
+#     'debug_toolbar.panels.sql.SQLPanel',
+#     'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+#     'debug_toolbar.panels.templates.TemplatesPanel',
+#     'debug_toolbar.panels.cache.CachePanel',
+#     'debug_toolbar.panels.signals.SignalsPanel',
+#     'debug_toolbar.panels.logging.LoggingPanel',
+#     'debug_toolbar.panels.redirects.RedirectsPanel',
+# ]
+
 SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=3),
     'ROTATE_REFRESH_TOKENS': True,
+}
+
+
+def show_toolbar(request):
+    return True
+
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

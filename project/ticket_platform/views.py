@@ -19,6 +19,7 @@ from .serializers import EventSerializer, TicketSerializer, AccountSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import ViewSet, ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.decorators import action
+from django.views.decorators.cache import cache_page
 
 
 from datetime import datetime

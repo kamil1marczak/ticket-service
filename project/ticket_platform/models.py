@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Count, Q
 from datetime import datetime, timedelta
 import uuid
+from django.utils.functional import cached_property
 
 
 class Event(models.Model):
@@ -18,7 +19,8 @@ class Event(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    @property
+    # @property
+    @cached_property
     def tickets_sold(self):
         tickets = self.ticket_set
         tickets.regular = tickets.filter(ticket_type=0).count()
@@ -27,7 +29,8 @@ class Event(models.Model):
 
         return tickets
 
-    @property
+    # @property
+    @cached_property
     def tickets_left(self):
         tickets = self.ticket_set
         tickets.regular = self.regular_tickets_number - tickets.filter(ticket_type=0).count()

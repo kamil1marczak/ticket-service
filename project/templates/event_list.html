@@ -23,15 +23,15 @@ table, th, td {
         <th>Description</th>
         <th>Price for regular ticket</th>
         <th>Regular ticket pool</th>
-        <th>Regular ticket left</th>
+        <th>Regular ticket sold</th>
         <th>Buy/ reserve ticket</th>
         <th>Price for premium ticket</th>
         <th>Premium ticket pool</th>
-        <th>Premium ticket left</th>
+        <th>Premium ticket sold</th>
         <th>Buy/ reserve ticket</th>
         <th>Price for VIP ticket</th>
         <th>VIP ticket pool</th>
-        <th>VIP ticket left</th>
+        <th>VIP ticket sold</th>
         <th>Buy/ reserve ticket</th>
       </tr>
       </thead>
@@ -48,9 +48,9 @@ table, th, td {
             {% endif %}
           </td>
           <td>{{ v.regular_tickets_number }}</td>
-          <td>{{ v.tickets_left.regular }}</td>
+          <td>{{ v.tickets_sold.regular }}</td>
         <td>
-          {% if v.tickets_left.regular > 0 %}
+          {% if v.tickets_sold.regular > 0 %}
             <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=0 sold_reserved=0 %}">Buy</a>
           <br>
             <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=0 sold_reserved=1 %}">Reserve</a>
@@ -68,9 +68,9 @@ table, th, td {
           </td>
 
           <td>{{ v.premium_tickets_number }}</td>
-        <td>{{ v.tickets_left.premium }}</td>
+        <td>{{ v.tickets_sold.premium }}</td>
         <td>
-          {% if v.tickets_left.premium > 0 %}
+          {% if v.tickets_sold.premium > 0 %}
             <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=1 sold_reserved=0 %}">Buy</a>
           <br>
             <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=1 sold_reserved=1 %}">Reserve</a>
@@ -90,10 +90,10 @@ table, th, td {
 
             </td>
           <td>{{ v.vip_tickets_number }}</td>
-        <td>{{ v.tickets_left.vip }}</td>
+        <td>{{ v.tickets_sold.vip }}</td>
 
         <td>
-          {% if v.tickets_left.vip > 0 %}
+          {% if v.tickets_sold.vip > 0 %}
             <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=2 sold_reserved=0 %}">Buy</a>
           <br>
             <a href="{% url 'buy_ticket' event_pk=v.pk  ticket_type=2 sold_reserved=1 %}">Reserve</a>

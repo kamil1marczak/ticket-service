@@ -6,3 +6,5 @@ django-crispy-forms==1.10.0
 djangorestframework==3.12.2
 djangorestframework-simplejwt==4.6.0
 django-rest-auth==0.9.5
+django-debug-toolbar==3.2
+django-redis-cache==3.0.0
