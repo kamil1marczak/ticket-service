@@ -37,8 +37,6 @@ REST API Routs:
 |                                              |             |                      |             |                                    |
 | http://localhost:1337/api/token/             | GET         | receive auth token   | open to all | username, password                 |
 
+TEST
 
-
-TODO:
-
-- test
+to run test execute: `sudo docker-compose exec web python manage.py test`

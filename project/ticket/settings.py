@@ -156,6 +156,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
 CELERY_BROKER_URL = "redis://redis:6379"
