@@ -22,12 +22,14 @@ class Event(models.Model):
     # @property
     @cached_property
     def tickets_sold(self):
-        tickets = self.ticket_set
-        tickets.regular = tickets.filter(ticket_type=0).count()
-        tickets.premium = tickets.filter(ticket_type=1).count()
-        tickets.vip = tickets.filter(ticket_type=2).count()
 
-        return tickets
+        tickets = self.ticket_set
+        ticket_count = tickets.filter(ticket_type__in=[0, 1, 2]).values('ticket_type').order_by('ticket_type').annotate(count=Count('ticket_type'))
+        ticket_count_dict = {r['ticket_type'] : r['count'] for r in ticket_count}
+        new_keys = {0: 'regular', 1: 'premium', 2: 'vip'}
+        ticket_count_new_dict = {new_keys[key]: value for key, value in ticket_count_dict.items()}
+
+        return ticket_count_new_dict
 
     # @property
     @cached_property
