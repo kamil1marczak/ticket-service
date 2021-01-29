@@ -1,3 +1,10 @@
+fully dockeried django app, with:
+1) django rest freamework 
+2) generic view displays 
+3)db enhanced by redis chache 
+4) django-celery-beat
+
+
 requirement:
 Docker, DockerCompose, Redis, Celery, Django
 
