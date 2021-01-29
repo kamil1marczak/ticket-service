@@ -1,7 +1,7 @@
 fully dockeried django app, with:
 1) django rest freamework 
 2) generic view displays 
-3) db enhanced by redis chache 
+3) db enhanced by redis cache 
 4) django-celery-beat
 
 
